@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --container-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at top left, rgba(59, 130, 246, 0.15), transparent 40%),
+                              radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.05), transparent 40%);
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--container-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .form-group:focus-within label {
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        select.form-control {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.25rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), #1e40af);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .result-card {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+        }
+
+        .result-card.show {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .result-card.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .result-card.danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .result-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .success .result-title { color: var(--success); }
+        .danger .result-title { color: var(--danger); }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading .spinner { display: block; }
+        .loading .btn-text { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Performance Predictor</h1>
+            <p>Enter student metrics to forecast outcomes</p>
+        </div>
+
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="study_hours">Study Hours / Week</label>
+                <input type="number" id="study_hours" class="form-control" placeholder="e.g. 15" required step="0.5" min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="attendance_percentage">Attendance Percentage</label>
+                <input type="number" id="attendance_percentage" class="form-control" placeholder="0 - 100" required min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="previous_grades">Previous Grades</label>
+                <input type="number" id="previous_grades" class="form-control" placeholder="0 - 100" required min="0" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="tutoring">Tutoring Support</label>
+                <select id="tutoring" class="form-control" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <span class="btn-text">Predict Outcome</span>
+                <span class="spinner"></span>
+            </button>
+        </form>
+
+        <div id="resultCard" class="result-card">
+            <div id="resultIcon" class="result-icon"></div>
+            <div id="resultTitle" class="result-title"></div>
+            <div id="resultDesc" class="result-desc"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const resultCard = document.getElementById('resultCard');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDesc = document.getElementById('resultDesc');
+
+            // Loading state
+            btn.classList.add('loading');
+            btn.disabled = true;
+            resultCard.classList.remove('show');
+            setTimeout(() => { resultCard.style.display = 'none'; }, 300);
+
+            const payload = {
+                study_hours: document.getElementById('study_hours').value,
+                attendance_percentage: document.getElementById('attendance_percentage').value,
+                previous_grades: document.getElementById('previous_grades').value,
+                tutoring: document.getElementById('tutoring').value
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error);
+
+                setTimeout(() => {
+                    resultCard.style.display = 'block';
+                    void resultCard.offsetWidth; // Trigger reflow
+                    
+                    resultCard.classList.remove('success', 'danger');
+
+                    if (data.prediction === 1) {
+                        resultCard.classList.add('success');
+                        resultIcon.innerHTML = '🎯'; // Used an emoji here as UI icon, but plain text would work
+                        resultTitle.innerText = 'High Pass Probability';
+                        resultDesc.innerText = 'This student is on track to succeed based on their current metrics.';
+                    } else {
+                        resultCard.classList.add('danger');
+                        resultIcon.innerHTML = '🛡️'; 
+                        resultTitle.innerText = 'At-Risk Flag';
+                        resultDesc.innerText = 'This student may require intervention or additional support to pass.';
+                    }
+
+                    resultCard.classList.add('show');
+                }, 400);
+
+            } catch (error) {
+                console.error("Prediction error:", error);
+                alert("Failed to connect to the prediction engine.");
+            } finally {
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                }, 400);
+            }
+        });
+    </script>
+</body>
+</html>
