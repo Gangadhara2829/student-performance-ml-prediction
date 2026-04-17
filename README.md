@@ -2,7 +2,10 @@
 
 > **🚀 Live Demo:** [https://student-predict-zeta.vercel.app](https://student-predict-zeta.vercel.app)
 
-A generic Machine Learning project that predicts whether a student will pass or fail based on their study habits and past performance. Built with Python, Pandas, and Scikit-Learn.
+## Core Focus
+
+This project primarily focuses on building a Machine Learning model using Python and Scikit-learn, with an optional web interface for user interaction.
+
 
 ## Overview
 This project demonstrates the fundamental steps of building a classification model:
