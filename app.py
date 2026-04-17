@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Frontend')
 
 # Initialize and train the model globally on server start
 try:

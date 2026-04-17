@@ -1,5 +1,7 @@
 # Student Performance Predictor
 
+> **🚀 Live Demo:** [https://student-predict-zeta.vercel.app](https://student-predict-zeta.vercel.app)
+
 A generic Machine Learning project that predicts whether a student will pass or fail based on their study habits and past performance. Built with Python, Pandas, and Scikit-Learn.
 
 ## Overview
